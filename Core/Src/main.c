@@ -92,9 +92,9 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &rx_buf, 1);
-  int flag_color = 0;
-  uint8_t flag1 = 1;
-  HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
+
+  openmv[2] = BLUE;
+  uint8_t flag1 = BLUE;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -103,68 +103,21 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
-    // if (openmv[2] != 0)
-    // {
-    //   //printf("%d %d %d %d\r\n", openmv[0],openmv[1],openmv[2],openmv[3]);
-    // }
-    switch (openmv[2])
+	 printf("***********%d\r\n",flag1);
+    if (openmv[2] == BLUE && flag1 == BLUE)
     {
-    case blue:
-      if (flag1 == 0)
-      {
-        printf("1: get blue\r\n");
-        flag1++;
-        printf("flag1 %d\r\n", flag1);
-      }
-      break;
-    case green:
-      flag1 = 1;
-      break;
-    case yellow:
-      flag1 = 1;
-      break;
-    case red:
-      flag1 = 1;
-      break;
-    case brown:
-      flag1 = 1;
-      break;
-    default:
-      break;
+	  printf("%d\r\n",flag1);
+      printf("BLUE\r\n");
+	  flag1 = RED;
+	  printf("%d\r\n",flag1);
     }
-    if ((openmv[2] == brown) && (flag1 == 4))
+    else if (openmv[2] == RED && flag1 == RED)
     {
-      printf("5:get brown\r\n");
-
-      printf("flag1 %d", flag1);
-    }
-    else if ((openmv[2] == red) && (flag1 == 3))
-    {
-      printf("4:get red\r\n");
-      flag1 = 4;
-      printf("flag1 %d", flag1);
-    }
-    else if ((openmv[2] == green) && (flag1 == 1))
-    {
-      printf("2: get green\r\n");
-      flag1 = 2;
-      printf("flag1 %d", flag1);
-    }
-    else if ((openmv[2] == yellow) && (flag1 == 2))
-    {
-      printf("3: get yellow\r\n");
-      flag1 = 3;
-      printf("flag1 %d", flag1);
-    }
-    else if ((flag1 == 0) && (openmv[2] == blue))
-    {
-      printf("1: get blue\r\n");
-      flag1 = 1;
-      printf("flag1 %d\r\n", flag1);
+      printf("RED\r\n");
     }
     /* USER CODE END 3 */
+	HAL_Delay(1000);
   }
 }
 /**
