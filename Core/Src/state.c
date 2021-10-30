@@ -1,10 +1,6 @@
-
 #include "state.h"
 #include "usart.h"
-#include <stdio.h>
-STATE state = state_slow;//µ±Ç°×´Ì¬£¬È«¾Ö±äÁ¿
-
-
+STATE state = state_slow; //å½“å‰çŠ¶æ€ï¼Œå…¨å±€å˜é‡
 
 //openmv[7] = {0x2c, 7, color&distance,  way_direction, angle, ball, 0x5B}
 
@@ -13,35 +9,33 @@ STATE state = state_slow;//µ±Ç°×´Ì¬£¬È«¾Ö±äÁ¿
 //angle: 0~180
 //open: 0,1
 
-
-void action_quick()//¿ìÅÜ²½Ì¬
+void action_quick() //å¿«è·‘æ­¥æ€
 {
-    printf("action_quick\r\n");
-
+	printf("action_quick\r\n");
 }
 
-void action_slow()//Âı×ß²½Ì¬
+void action_slow() //æ…¢èµ°æ­¥æ€
 {
-    printf("action_slow\r\n");
+	printf("action_slow\r\n");
 }
 
-void action_climb()//ÅÀÂ¥²½Ì¬
+void action_climb() //çˆ¬æ¥¼æ­¥æ€
 {
-    printf("action_climb\r\n");
+	printf("action_climb\r\n");
 }
 
-void action_stop()//Í£Ö¹²½Ì¬
+void action_stop() //åœæ­¢æ­¥æ€
 {
-    printf("action_stop\r\n");
+	printf("action_stop\r\n");
 }
 
-void action_open()//¿ªÏä¶¯×÷
+void action_open() //å¼€ç®±åŠ¨ä½œ
 {
-    printf("action_open\r\n");
+	printf("action_open\r\n");
 }
 
 /*
-void trans(STATE st)//×´Ì¬×ªÒÆ
+void trans(STATE st)//çŠ¶æ€è½¬ç§»
 {
     int state_wrong = 0;
     if(st == state1 && state != state4)
@@ -71,103 +65,127 @@ void trans(STATE st)//×´Ì¬×ªÒÆ
     }
 }
 */
+void state_trans() //çŠ¶æ€è½¬ç§»
+{
+	switch (openmv[2])
+	{
+	case YELLOW:
+		state = state_climb; //ä¸Šå°é˜¶
+		break;
+	case BLUE:
+		//ä»èµ·ç‚¹å‡ºå‘
+		break;
+	case RED:
+		if (openmv[5] == 0)
+		{
+			state = state_slow; //ä¸‹æ–œå¡
+		}
+		else
+		{
+			state = state_open; //åˆ°è¾¾2å·ä½æˆ·åŒº
+		}
+		break;
+	case GREEN:
+		if (openmv[5] == 0)
+		{
+			state = state_slow; //ä¸‹æ–œå¡
+		}
+		else
+		{
+			state = state_open; //åˆ°è¾¾1å·ä½æˆ·åŒº
+		}
+		break;
+	case BROWN:
+		if (openmv[5] == 1)
+		{
+			state = state_open; //åˆ°è¾¾3å·ä½æˆ·åŒº
+		}
+		break;
+	default:
+		break;
+	}
+}
 
 void state_machine()
 {
-	
-	//ÅĞ¶Ïµ±Ç°×´Ì¬£º
+
+	//åˆ¤æ–­å½“å‰çŠ¶æ€ï¼š
 	//openmv[7] = {0x2c, 7, color&distance,  way_direction, angle, open, 0x5B}
-//color&distance: 0,1,2,3,4,5,6
-//way_direction: -1,0,1
-//angle: 0~180
-//open: 0,1
-	  if(openmv[2]==YELLOW){//ÉÏÌ¨½×
-			state=state_climb;
+	//color&distance: 0,1,2,3,4,5,6
+	//way_direction: -1,0,1
+	//angle: 0~180
+	//open: 0,1
+	// çŠ¶æ€åˆ‡æ¢
+	state_trans();
+	//æ‰§è¡ŒçŠ¶æ€å¯¹åº”çš„åŠ¨ä½œ
+	switch (state)
+	{
+		static uint8_t flag_quick = 1;
+		static uint8_t flag_slow = 1;
+		static uint8_t flag_climb = 1;
+		static uint8_t flag_open = 1;
+		static uint8_t flag_look = 1;
+
+	case state_quick:
+		if (flag_quick)
+		{
+			action_quick();
+			flag_quick = 0;
+			flag_slow = 1;
+			flag_climb = 1;
+			flag_open = 1;
+			flag_look = 1;
 		}
-		else if(openmv[2]==BLUE){//´ÓÆğµã³ö·¢
-			//state=state_slow;
+		break;
+	case state_slow:
+		if (flag_slow)
+		{
+			action_slow();
+			flag_slow = 0;
+			flag_quick = 1;
+			flag_climb = 1;
+			flag_open = 1;
+			flag_look = 1;
 		}
-		else if((openmv[2]==RED)&&(openmv[5]==0)){//ÏÂĞ±ÆÂ
-			state=state_slow;
+
+		break;
+	case state_climb:
+		if (flag_climb)
+		{
+			action_climb();
+			flag_climb = 0;
+			flag_quick = 1;
+			flag_slow = 1;
+			flag_open = 1;
+			flag_look = 1;
 		}
-		else if((openmv[2]==GREEN)&&(openmv[5]==0)){//½ø²İµØ
-			state=state_slow;
+
+		break;
+	case state_open:
+		if (flag_open)
+		{
+			action_open();
+			action_stop();
+			flag_open = 0;
+			flag_climb = 1;
+			flag_quick = 1;
+			flag_slow = 1;
+			flag_look = 1;
 		}
-		else if((openmv[2]==GREEN)&&(openmv[5]==1)){//µ½´ï1ºÅ×¡»§Çø
-			state=state_open;
+
+		break;
+	case state_look:
+		if (flag_look)
+		{
+			action_stop();
+			flag_look = 0;
+			flag_quick = 1;
+			flag_slow = 1;
+			flag_climb = 1;
+			flag_open = 1;
 		}
-		else if((openmv[2]==RED)&&(openmv[5]==1)){//µ½´ï2ºÅ×¡»§Çø
-			state=state_open;
-		}
-		else if((openmv[2]==BROWN)&&(openmv[5]==1)){//µ½´ï3ºÅ×¡»§Çø
-			state=state_open;
-		}
-	
-	//Ö´ĞĞ×´Ì¬¶ÔÓ¦µÄ¶¯×÷
-    switch(state)
-    {
-			  int flag_quick=1;
-			  int flag_slow=1;
-			  int flag_climb=1;
-			  int flag_open=1;
-			  int flag_look=1;
-			
-        case state_quick:
-					if(flag_quick){
-						action_quick();
-				    flag_quick=0;
-						flag_slow=1;
-			      flag_climb=1;
-			      flag_open=1;
-			      flag_look=1;
-					}
-            break;
-        case state_slow:
-					if(flag_slow){
-						action_slow();
-				    flag_slow=0;
-						flag_quick=1;
-						flag_climb=1;
-						flag_open=1;
-						flag_look=1;
-						
-					}
-            
-            break;
-        case state_climb:
-					if(flag_climb){
-						action_climb();
-				    flag_climb=0;
-						flag_quick=1;
-						flag_slow=1;
-						flag_open=1;
-						flag_look=1;
-					}
-            
-            break;
-				case state_open:
-					if(flag_open){
-						action_open();
-				    action_stop();
-				    flag_open=0;
-						flag_climb=1;
-						flag_quick=1;
-						flag_slow=1;
-						flag_look=1;
-					}
-            
-            break;
-				case state_look:
-					if(flag_look){
-						action_stop();
-				    flag_look=0;
-						flag_quick=1;
-						flag_slow=1;
-			      flag_climb=1;
-			      flag_open=1;
-					}
-            break;
-        default:
-            break;
-    }
+		break;
+	default:
+		break;
+	}
 }

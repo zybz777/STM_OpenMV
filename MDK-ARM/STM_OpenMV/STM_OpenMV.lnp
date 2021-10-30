@@ -1,4 +1,4 @@
---cpu=Cortex-M4.fp
+--cpu=Cortex-M4.fp.sp
 "stm_openmv\startup_stm32f407xx.o"
 "stm_openmv\main.o"
 "stm_openmv\gpio.o"
@@ -24,6 +24,6 @@
 "stm_openmv\stm32f4xx_hal_exti.o"
 "stm_openmv\system_stm32f4xx.o"
 --library_type=microlib --strict --scatter "STM_OpenMV\STM_OpenMV.sct"
---summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "STM_OpenMV.map" -o STM_OpenMV\STM_OpenMV.axf

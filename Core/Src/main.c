@@ -21,11 +21,10 @@
 #include "main.h"
 #include "usart.h"
 #include "gpio.h"
-#include "state.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
-//#include "mine.h"
+#include "state.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -90,6 +89,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &rx_buf, 1);
 
@@ -104,7 +104,16 @@ int main(void)
   {
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
-    state_machine();
+    //state_machine();
+	printf("0x2C ");
+	printf("7 ");
+	printf("%d ", openmv[2]);
+	printf("%d ", openmv[3]);
+	printf("%d ", openmv[4]);
+	printf("%d ", openmv[5]);
+	printf("0x5B ");
+    printf("\r\n");
+	HAL_Delay(500);
     /* USER CODE END 3 */
   }
 }

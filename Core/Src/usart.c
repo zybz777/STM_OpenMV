@@ -185,7 +185,6 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-// printf 重定向
 int fputc(int ch, FILE *f)
 {
   uint8_t temp[1] = {ch};
@@ -193,61 +192,64 @@ int fputc(int ch, FILE *f)
   return ch;
 }
 
-uint8_t openmv[7];                     //存取数据
+uint8_t openmv[7]; //存取数据
 uint8_t rx_buf;
-// openmv接受数据
+
 void Openmv_Receive_Data(uint8_t data) //接收Openmv传过来的数据
 {
-  int len = 7;
-  static uint8_t state = 0;
+  static uint8_t len = 7;
+  static uint8_t RxState = 0;
   static uint8_t bit_number = 0;
-  if (state == 0 && data == 0x2C)
+  switch (RxState)
   {
-    state = 1;
-    openmv[bit_number++] = data;
-  }
-  else if (state == 1 && data == len)
-  {
-    state = 2;
-    openmv[bit_number++] = data;
-  }
-  else if (state == 2)
-  {
+
+  case 0: //帧头1匹配
+    if (data == 0x2C)
+    {
+      RxState = 1;
+      openmv[bit_number++] = data;
+    }
+    break;
+  case 1: //帧头2匹配
+    if (data == len)
+    {
+      RxState = 2;
+      openmv[bit_number++] = data;
+    }
+    break;
+  case 2: //数据帧接受
     openmv[bit_number++] = data;
     if (bit_number >= len - 1)
     {
-      state = 3;
+      RxState = 3;
     }
-  }
-  else if (state == 3) //检测是否接受到结束标志
-  {
+    break;
+  case 3: // 帧尾匹配
     if (data == 0x5B)
     {
-      state = 0;
       openmv[bit_number++] = data;
-      //printf("over");
     }
-    else if (data != 0x5B)
+    else
     {
-      state = 0;
       for (int i = 0; i < len; i++)
       {
         openmv[i] = 0x00;
       }
     }
-  }
-  else
-  {
-    state = 0;
     bit_number = 0;
+    RxState = 0;
+    break;
+  default: // 接受异常 归零
     for (int i = 0; i < len; i++)
     {
       openmv[i] = 0x00;
     }
+    RxState = 0;
+    bit_number = 0;
+    break;
   }
 }
 
-// 接受回调函数
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (USART1 == huart->Instance)
