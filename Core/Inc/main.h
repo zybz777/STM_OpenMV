@@ -62,9 +62,9 @@ void Error_Handler(void);
 #define LED3_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 #define BLACK 0
-#define BROWN 1
+#define BROWN 3
 #define RED 2
-#define GREEN 3
+#define GREEN 1
 #define YELLOW 4
 #define BLUE 5
 /* USER CODE END Private defines */

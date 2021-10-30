@@ -35,7 +35,7 @@ extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN Private defines */
-extern uint8_t openmv[4]; 
+extern uint8_t openmv[7]; 
 extern uint8_t rx_buf; 
 /* USER CODE END Private defines */
 

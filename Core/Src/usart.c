@@ -185,7 +185,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-
+// printf 重定向
 int fputc(int ch, FILE *f)
 {
   uint8_t temp[1] = {ch};
@@ -193,11 +193,12 @@ int fputc(int ch, FILE *f)
   return ch;
 }
 
-uint8_t openmv[4];                     //存取数据
+uint8_t openmv[7];                     //存取数据
 uint8_t rx_buf;
+// openmv接受数据
 void Openmv_Receive_Data(uint8_t data) //接收Openmv传过来的数据
 {
-  int len = 4;
+  int len = 7;
   static uint8_t state = 0;
   static uint8_t bit_number = 0;
   if (state == 0 && data == 0x2C)
@@ -246,6 +247,7 @@ void Openmv_Receive_Data(uint8_t data) //接收Openmv传过来的数据
   }
 }
 
+// 接受回调函数
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (USART1 == huart->Instance)

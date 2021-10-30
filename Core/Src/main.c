@@ -21,7 +21,7 @@
 #include "main.h"
 #include "usart.h"
 #include "gpio.h"
-
+#include "state.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
@@ -93,8 +93,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &rx_buf, 1);
 
-  openmv[2] = BLUE;
-  uint8_t flag1 = BLUE;
+  //uint8_t flag1 = BLUE;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -104,20 +104,8 @@ int main(void)
   {
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
-	 printf("***********%d\r\n",flag1);
-    if (openmv[2] == BLUE && flag1 == BLUE)
-    {
-	  printf("%d\r\n",flag1);
-      printf("BLUE\r\n");
-	  flag1 = RED;
-	  printf("%d\r\n",flag1);
-    }
-    else if (openmv[2] == RED && flag1 == RED)
-    {
-      printf("RED\r\n");
-    }
+    state_machine();
     /* USER CODE END 3 */
-	HAL_Delay(1000);
   }
 }
 /**
