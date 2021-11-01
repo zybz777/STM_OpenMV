@@ -94,7 +94,7 @@ int main(void)
   HAL_UART_Receive_IT(&huart1, &rx_buf, 1);
 
   //uint8_t flag1 = BLUE;
-
+  uint8_t i = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -104,16 +104,13 @@ int main(void)
   {
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
-    //state_machine();
-	printf("0x2C ");
-	printf("7 ");
-	printf("%d ", openmv[2]);
-	printf("%d ", openmv[3]);
-	printf("%d ", openmv[4]);
-	printf("%d ", openmv[5]);
-	printf("0x5B ");
-    printf("\r\n");
-	HAL_Delay(500);
+    // state_machine();
+	//printf("OK\r\n");
+    if (openmv[2] != 0)
+    {
+      i++;
+      printf("reveive: %d, info: %d\r\n", i, openmv[2]);
+    }
     /* USER CODE END 3 */
   }
 }

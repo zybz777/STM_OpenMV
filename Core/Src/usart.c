@@ -188,7 +188,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
 int fputc(int ch, FILE *f)
 {
   uint8_t temp[1] = {ch};
-  HAL_UART_Transmit(&huart2, temp, 1, 2); //huart2需要根据你的配置修改
+  HAL_UART_Transmit(&huart2, temp, 1, 2); //huart需要根据你的配置修改
   return ch;
 }
 
@@ -202,7 +202,6 @@ void Openmv_Receive_Data(uint8_t data) //接收Openmv传过来的数据
   static uint8_t bit_number = 0;
   switch (RxState)
   {
-
   case 0: //帧头1匹配
     if (data == 0x2C)
     {
