@@ -19,11 +19,13 @@
 #define OPEN openmv[5]
 typedef enum
 {
-    state_quick,
-    state_slow,
-    state_climb,
-    state_open,
-    state_look,
+    state_1_begin,
+    state_2_recognize_ball,
+    state_3_green_user1,
+    state_4_yellow_climb,
+    state_5_red_downstairs,
+    state_6_green_grass,
+    state_7_brown_user3
 } STATE;
 
 /* 状态切换&&执行 */
@@ -38,7 +40,8 @@ void action_slow(void);  //慢走步态
 void action_climb(void); //爬楼步态
 void action_stop(void);  //停止步态
 void action_open(void);  //开箱动作
-
+void action_left(void);  //向左移动
+void action_right(void); //向右移动
 /* USER CODE END Prototypes */
 
 #endif
