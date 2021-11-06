@@ -105,7 +105,7 @@ int main(void)
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
     // state_machine();
-	//printf("OK\r\n");
+    //printf("OK\r\n");
     if (openmv[2] != 0)
     {
       i++;

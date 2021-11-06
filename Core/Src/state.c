@@ -1,6 +1,7 @@
 #include "state.h"
 #include "usart.h"
-STATE state = state_1_begin; //当前状态，全局变量
+STATE state = state_1_begin;	   // 当前状态，全局变量
+STATE state_direction = state_mid; // 控制左右平衡
 /*
 openmv[7] = {0x2c, 7, color&distance,  way_direction, angle, ball, 0x5B}
 color&distance: 0,1,2,3,4,5,6
@@ -8,6 +9,8 @@ way_direction: -1,0,1
 angle: 0~180
 open: 0,1
 */
+
+/***** 动作函数 *****/
 void action_quick() //快跑步态
 {
 	printf("action_quick\r\n");
@@ -46,7 +49,8 @@ void action_open() //开箱动作
 	// pwm 关闭舵机
 }
 
-void state_trans(STATE st) //状态转移
+/***** 状态切换 *****/
+void state_trans(STATE st)
 {
 	switch (st)
 	{
@@ -98,20 +102,36 @@ void state_trans(STATE st) //状态转移
 			state = st;
 		}
 		break;
-
 	default:
 		break;
 	}
 }
-
+// 方向状态切换
+void state_direction_trans(void)
+{
+	if (DIRECTION == 0) // 正向
+	{
+		state_direction = state_mid;
+	}
+	else if (DIRECTION == 1) // 现在方向偏左，需要向右调整
+	{
+		state_direction = state_left;
+	}
+	else if (DIRECTION == -1)
+	{
+		state_direction = state_right;
+	}
+}
+/***** 状态执行 *****/
 void state_machine()
 {
+	// 赛道进程
 	switch (state)
 	{
 	case state_1_begin:
 		// 执行动作
 		action_slow(); // 慢步前进
-		// 状态转移
+		// 状态转移，走到蓝色前切换
 		state_trans(state_2_recognize_ball);
 		break;
 
@@ -212,6 +232,28 @@ void state_machine()
 		state_trans(state_1_begin);
 		break;
 
+	default:
+		break;
+	}
+	// 方向进程
+	switch (state_direction)
+	{
+	case state_mid:
+		// 状态转移
+		state_direction_trans();
+		break;
+	case state_right:
+		// 向左调整
+		action_left();
+		// 状态转移
+		state_direction_trans();
+		break;
+	case state_left:
+		// 向右调整
+		action_right();
+		// 状态转移
+		state_direction_trans();
+		break;
 	default:
 		break;
 	}

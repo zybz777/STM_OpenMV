@@ -5,14 +5,14 @@
 /* Includes ------------------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-// ¶¨ÒåÑÕÉ«
+// å®šä¹‰é¢œè‰²
 #define BLACK 0
 #define BROWN 3
 #define RED 2
 #define GREEN 1
 #define YELLOW 4
 #define BLUE 5
-// ¶¨Òå´®¿Ú½ÓÊÜµÄĞÅÏ¢Î»
+// å®šä¹‰ä¸²å£æ¥å—çš„ä¿¡æ¯ä½
 #define COLOR openmv[2]
 #define DIRECTION openmv[3]
 #define ANGLE openmv[4]
@@ -25,23 +25,28 @@ typedef enum
     state_4_yellow_climb,
     state_5_red_downstairs,
     state_6_green_grass,
-    state_7_brown_user3
+    state_7_brown_user3, // ä¸ƒä¸ªçŠ¶æ€æµè½¬
+    state_right,
+    state_mid,
+    state_left, // ä¸‰ä¸ªçŠ¶æ€æ§åˆ¶å·¦å³ä½ç½®
 } STATE;
 
-/* ×´Ì¬ÇĞ»»&&Ö´ĞĞ */
+/* çŠ¶æ€åˆ‡æ¢&&æ‰§è¡Œ */
 void state_trans(void);
+void state_direction_trans(void);
 void state_machine(void);
+
 /* USER CODE END Private defines */
 
 /* USER CODE BEGIN Prototypes */
-/* ¶¯×÷º¯Êı */
-void action_quick(void); //¿ìÅÜ²½Ì¬
-void action_slow(void);  //Âı×ß²½Ì¬
-void action_climb(void); //ÅÀÂ¥²½Ì¬
-void action_stop(void);  //Í£Ö¹²½Ì¬
-void action_open(void);  //¿ªÏä¶¯×÷
-void action_left(void);  //Ïò×óÒÆ¶¯
-void action_right(void); //ÏòÓÒÒÆ¶¯
+/* åŠ¨ä½œå‡½æ•° */
+void action_quick(void); //å¿«è·‘æ­¥æ€
+void action_slow(void);  //æ…¢èµ°æ­¥æ€
+void action_climb(void); //çˆ¬æ¥¼æ­¥æ€
+void action_stop(void);  //åœæ­¢æ­¥æ€
+void action_open(void);  //å¼€ç®±åŠ¨ä½œ
+void action_left(void);  //å‘å·¦ç§»åŠ¨
+void action_right(void); //å‘å³ç§»åŠ¨
 /* USER CODE END Prototypes */
 
 #endif
