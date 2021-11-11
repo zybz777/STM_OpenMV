@@ -19,8 +19,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
@@ -89,12 +91,12 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
-
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &rx_buf, 1);
-
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   //uint8_t flag1 = BLUE;
-  uint8_t i = 0;
+  // uint8_t i = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -103,17 +105,40 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
-    // state_machine();
+     state_machine();
+	  /*
+	  for(int i = 0; i < 8; i++)
+	  {
+		  printf("%d ",openmv[i]);
+	  }
+	  printf("\r\n");
+	  HAL_Delay(100);
+	  */
     //printf("OK\r\n");
-    if (openmv[2] != 0)
-    {
-      i++;
-      printf("reveive: %d, info: %d\r\n", i, openmv[2]);
-    }
+    //if (openmv[2] != 0)
+    //{
+    //  i++; 0 - 2500
+    //  printf("reveive: %d, info: %d\r\n", i, openmv[2]);
+    // }
+	 
+   // __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 1000); //0度
+    //HAL_Delay(2000);
+	
+    //__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 1600); //90
+    //HAL_Delay(2000);
+	/*
+     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 100);
+     HAL_Delay(1000);
+	       __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 500);
+     HAL_Delay(1000);
+	  */
+
     /* USER CODE END 3 */
   }
 }
+
 /**
   * @brief System Clock Configuration
   * @retval None

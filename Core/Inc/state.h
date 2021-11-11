@@ -3,7 +3,9 @@
 #define __STATE_H__
 
 /* Includes ------------------------------------------------------------------*/
-
+#include "main.h"
+#include "stm32f4xx_hal.h"
+#include "usart.h"
 /* USER CODE BEGIN Private defines */
 // 定义颜色
 #define BLACK 0
@@ -17,6 +19,7 @@
 #define DIRECTION openmv[3]
 #define ANGLE openmv[4]
 #define OPEN openmv[5]
+#define BALL openmv[6]
 typedef enum
 {
     state_1_begin,
@@ -32,7 +35,7 @@ typedef enum
 } STATE;
 
 /* 状态切换&&执行 */
-void state_trans(void);
+void state_trans(STATE st);
 void state_direction_trans(void);
 void state_machine(void);
 
@@ -40,13 +43,17 @@ void state_machine(void);
 
 /* USER CODE BEGIN Prototypes */
 /* 动作函数 */
+
+// 下层运动机构
 void action_quick(void); //快跑步态
 void action_slow(void);  //慢走步态
 void action_climb(void); //爬楼步态
 void action_stop(void);  //停止步态
-void action_open(void);  //开箱动作
 void action_left(void);  //向左移动
 void action_right(void); //向右移动
+
+// 上层机构
+void action_open(void); //开箱动作
 /* USER CODE END Prototypes */
 
 #endif

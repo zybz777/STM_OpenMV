@@ -188,42 +188,43 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
 int fputc(int ch, FILE *f)
 {
   uint8_t temp[1] = {ch};
-  HAL_UART_Transmit(&huart2, temp, 1, 2); //huart需要根据你的配置修改
+  HAL_UART_Transmit(&huart2, temp, 1, 2); // redef printf
   return ch;
 }
 
-uint8_t openmv[7]; //存取数据
+uint8_t openmv[8]; //receive datas
 uint8_t rx_buf;
-
-void Openmv_Receive_Data(uint8_t data) //接收Openmv传过来的数据
+uint8_t RxState = 0;
+void Openmv_Receive_Data(uint8_t data) // RX data
 {
-  static uint8_t len = 7;
-  static uint8_t RxState = 0;
+  static uint8_t len = 8;
+  
   static uint8_t bit_number = 0;
+	//printf("now RX state is :%d\r\n", RxState);
   switch (RxState)
   {
-  case 0: //帧头1匹配
+  case 0: //header1
     if (data == 0x2C)
     {
       RxState = 1;
       openmv[bit_number++] = data;
     }
     break;
-  case 1: //帧头2匹配
+  case 1: //hearder2
     if (data == len)
     {
       RxState = 2;
       openmv[bit_number++] = data;
     }
     break;
-  case 2: //数据帧接受
+  case 2: //receive data
     openmv[bit_number++] = data;
     if (bit_number >= len - 1)
     {
       RxState = 3;
     }
     break;
-  case 3: // 帧尾匹配
+  case 3: // end
     if (data == 0x5B)
     {
       openmv[bit_number++] = data;
@@ -238,13 +239,15 @@ void Openmv_Receive_Data(uint8_t data) //接收Openmv传过来的数据
     bit_number = 0;
     RxState = 0;
     break;
-  default: // 接受异常 归零
+  default: // exception and reset
+	  /*
     for (int i = 0; i < len; i++)
     {
       openmv[i] = 0x00;
     }
     RxState = 0;
     bit_number = 0;
+  */
     break;
   }
 }
